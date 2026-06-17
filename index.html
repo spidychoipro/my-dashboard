@@ -1,96 +1,429 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SPIDYCHOI.EXE — system interface</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>hyunseok@endeavouros:~$</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --accent: #8b5cf6;
+      --green: #4ade80;
+      --cyan: #22d3ee;
+      --pink: #f472b6;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #0a0a0f;
+      color: #e2e8f0;
+      font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+    ::selection { background: #8b5cf6; color: #fff; }
+    .glow-purple { box-shadow: 0 0 20px rgba(139,92,246,0.06); }
+    .glow-purple:hover { box-shadow: 0 0 30px rgba(139,92,246,0.15); }
+    .glow-green { box-shadow: 0 0 12px rgba(74,222,128,0.06); }
+    .glow-green:hover { box-shadow: 0 0 20px rgba(74,222,128,0.12); }
+    .border-accent { border-color: #2a2a3a; }
+    .border-accent:hover { border-color: #8b5cf6; }
+
+    /* TL;DR tab buttons */
+    .tab-btn {
+      padding: 6px 18px;
+      font-size: 0.75rem;
+      font-family: inherit;
+      border: 1px solid #2a2a3a;
+      background: transparent;
+      color: #6b7280;
+      cursor: pointer;
+      transition: all 0.2s;
+      border-radius: 4px;
+      letter-spacing: 1px;
+      font-weight: 600;
+    }
+    .tab-btn:hover { color: #e2e8f0; border-color: #4b5563; }
+    .tab-btn.active {
+      color: #e2e8f0;
+      border-color: #8b5cf6;
+      background: rgba(139,92,246,0.1);
+    }
+
+    /* TL;DR content transition */
+    .tldr-content {
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+    .tldr-content.fade {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+
+    /* Signal dot pulse */
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.35; }
+    }
+    .dot-pulse { animation: pulse-dot 2s ease-in-out infinite; }
+
+    /* Cursor blink */
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+    .cursor-blink { animation: blink 1s step-end infinite; }
+
+    /* Tracker counter increment effect */
+    @keyframes count-pop {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+      100% { transform: scale(1); }
+    }
+    .count-pop { animation: count-pop 0.2s ease; }
+
+    /* ASCII art container */
+    .ascii-box {
+      line-height: 1.3;
+      font-size: 0.7rem;
+      white-space: pre;
+      color: #8b5cf6;
+    }
+
+    /* Activity card */
+    .act-card {
+      background: #101016;
+      border: 1px solid #2a2a3a;
+      border-radius: 8px;
+      padding: 1rem;
+      transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+    }
+    .act-card:hover {
+      border-color: #8b5cf6;
+      box-shadow: 0 0 25px rgba(139,92,246,0.08);
+      transform: translateY(-2px);
+    }
+
+    /* Widget box for anti-noise */
+    .widget-box {
+      background: #101016;
+      border: 1px solid #2a2a3a;
+      border-radius: 6px;
+      padding: 0.75rem 1rem;
+      transition: border-color 0.2s;
+    }
+    .widget-box:hover { border-color: #4b5563; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #2a2a3a; border-radius: 2px; }
+
+    /* Responsive ASCII */
+    @media (max-width: 640px) {
+      .ascii-box { font-size: 0.6rem; }
+    }
+  </style>
 </head>
 <body>
 
-<div id="app">
+  <div class="max-w-5xl mx-auto px-4 py-6 md:py-10 flex flex-col min-h-screen">
 
-  <!-- HEADER -->
-  <header class="sys-header">
-    <div class="sys-identity">
-      <span class="sys-name">SPIDYCHOI.EXE</span>
-      <span class="sys-ver">v2.4</span>
+    <!-- ════════════════════════════════
+         HEADER: terminal prompt
+         ════════════════════════════════ -->
+    <div class="flex items-center gap-2 text-sm mb-2 flex-wrap">
+      <span class="text-[#4ade80] font-bold">hyunseok</span>
+      <span class="text-[#6b7280]">@</span>
+      <span class="text-[#8b5cf6] font-bold">endeavouros</span>
+      <span class="text-[#6b7280]">:</span>
+      <span class="text-[#22d3ee]">~$</span>
+      <span class="text-[#e2e8f0] cursor-blink">_</span>
     </div>
-    <div class="sys-uptime" id="sys-uptime">UPTIME: 00:00:00</div>
-  </header>
 
-  <!-- STATUS BAR -->
-  <section class="status-bar">
-    <div class="stat">
-      <span class="stat-label">STATUS</span>
-      <span class="stat-val stat-online">● ONLINE</span>
-    </div>
-    <div class="stat">
-      <span class="stat-label">FOCUS</span>
-      <span class="stat-val">CODING</span>
-    </div>
-    <div class="stat">
-      <span class="stat-label">ENERGY</span>
-      <span class="stat-val">MEDIUM</span>
-    </div>
-    <div class="stat">
-      <span class="stat-label">MODE</span>
-      <span class="stat-val">LEARNING</span>
-    </div>
-    <div class="stat stat-signal">
-      <span class="stat-label">SIGNAL</span>
-      <div class="signal" id="signal-bar"></div>
-    </div>
-  </section>
+    <!-- ════════════════════════════════
+         NEOFETCH SECTION
+         ════════════════════════════════ -->
+    <div class="flex flex-wrap gap-6 md:gap-10 items-start mt-2 p-4 md:p-6 border border-[#2a2a3a] rounded-lg glow-purple bg-[#0c0c12]">
+      <!-- ASCII art -->
+      <div class="ascii-box shrink-0 select-none leading-[1.35] text-[0.7rem] md:text-[0.75rem]">
+╭──────────────────╮
+│  >_              │
+│  ──────────────  │
+│  ENDEAVOUR       │
+│  NEOTERM  v2.4   │
+│  ──────────────  │
+│  [●] ACTIVE      │
+╰──────────────────╯
+      </div>
 
-  <!-- MAIN CONTENT -->
-  <main class="main-content">
-
-    <!-- MODULE NAV -->
-    <nav class="module-nav">
-      <div class="module-nav-header">MODULES</div>
-      <div class="module-list" id="module-list">
-        <div class="module" data-mod="character">
-          <span class="mod-name">character</span>
-          <span class="mod-desc">View profile data</span>
+      <!-- System info -->
+      <div class="flex-1 min-w-0 text-sm space-y-1.5">
+        <div class="flex gap-3">
+          <span class="text-[#6b7280] w-[9ch] shrink-0">Name</span>
+          <span class="text-[#e2e8f0] font-medium">Hyunseok Choi (최현석)</span>
         </div>
-        <div class="module" data-mod="quests">
-          <span class="mod-name">quests</span>
-          <span class="mod-desc">Open quest log</span>
+        <div class="flex gap-3">
+          <span class="text-[#6b7280] w-[9ch] shrink-0">OS</span>
+          <span class="text-[#4ade80]">EndeavourOS <span class="text-[#6b7280]">(Linux 6.x)</span></span>
         </div>
-        <div class="module" data-mod="skills">
-          <span class="mod-name">skills</span>
-          <span class="mod-desc">Access skill tree</span>
+        <div class="flex gap-3">
+          <span class="text-[#6b7280] w-[9ch] shrink-0">Core</span>
+          <span class="text-[#e2e8f0]">Python · Security/CTF · AI Prompt · Neovim</span>
         </div>
-        <div class="module" data-mod="inventory">
-          <span class="mod-name">inventory</span>
-          <span class="mod-desc">List available tools</span>
+        <div class="flex gap-3">
+          <span class="text-[#6b7280] w-[9ch] shrink-0">Uptime</span>
+          <span class="text-[#22d3ee]" id="uptime-display">00:00:00</span>
         </div>
-        <div class="module module-secret" data-mod="logs">
-          <span class="mod-name">logs</span>
-          <span class="mod-desc">View system records</span>
+        <div class="flex gap-3">
+          <span class="text-[#6b7280] w-[9ch] shrink-0">Session</span>
+          <span class="text-[#e2e8f0]">interactive</span>
+          <span class="text-[#4ade80] text-[0.7rem] self-center flex items-center gap-1.5 ml-1">
+            <span class="inline-block w-2 h-2 rounded-full bg-[#4ade80] dot-pulse"></span> ONLINE
+          </span>
         </div>
       </div>
-    </nav>
+    </div>
 
-    <!-- OUTPUT PANEL -->
-    <section class="output-panel">
-      <div class="output-header">OUTPUT</div>
-      <div class="output-body" id="output-body">
-        <div class="output-ready">SYSTEM READY.<br><span class="cursor-blink">_</span></div>
+    <!-- ════════════════════════════════
+         TL;DR TOGGLE
+         ════════════════════════════════ -->
+    <div class="mt-8">
+      <div class="flex gap-2" id="tab-group">
+        <button class="tab-btn active" data-mode="tldr">TL;DR</button>
+        <button class="tab-btn" data-mode="normal">Normal</button>
+        <button class="tab-btn" data-mode="mz">MZ</button>
       </div>
-    </section>
+      <div class="mt-3 p-4 border border-[#2a2a3a] rounded-lg bg-[#0c0c12] min-h-[80px] flex items-center glow-purple">
+        <p id="tldr-text" class="tldr-content text-sm md:text-base leading-relaxed"></p>
+      </div>
+    </div>
 
-  </main>
+    <!-- ════════════════════════════════
+         ACTIVITY STATUS GRID
+         ════════════════════════════════ -->
+    <div class="mt-8">
+      <div class="text-[0.7rem] text-[#6b7280] tracking-[1px] mb-3">ACTIVITY STATUS  ──  4 MODULES ONLINE</div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
 
-  <!-- FOOTER -->
-  <footer class="sys-footer">
-    <span class="footer-msg">SYSTEM RUNNING STABLE</span>
-    <span class="footer-ts">last update: now</span>
-  </footer>
+        <!-- Chess -->
+        <div class="act-card">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[0.65rem] text-[#6b7280] tracking-[1px]">CHESS</span>
+            <span class="text-lg">♟️</span>
+          </div>
+          <div class="text-[0.7rem] space-y-1">
+            <div class="flex justify-between"><span class="text-[#6b7280]">Rating</span><span class="text-[#e2e8f0] font-bold">1,850</span></div>
+            <div class="flex justify-between"><span class="text-[#6b7280]">Peak</span><span class="text-[#22d3ee]">1,920</span></div>
+            <div class="flex justify-between"><span class="text-[#6b7280]">Games</span><span class="text-[#e2e8f0]">847</span></div>
+            <div class="flex justify-between items-center mt-1 pt-1 border-t border-[#1e1e2a]">
+              <span class="text-[#6b7280]">Lichess</span>
+              <span class="text-[0.6rem] text-[#4ade80] flex items-center gap-1"><span class="inline-block w-1.5 h-1.5 rounded-full bg-[#4ade80] dot-pulse"></span> ACTIVE</span>
+            </div>
+          </div>
+        </div>
 
-</div>
+        <!-- Hypercube -->
+        <div class="act-card">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[0.65rem] text-[#6b7280] tracking-[1px]">HYPERCUBE</span>
+            <span class="text-lg">🧊</span>
+          </div>
+          <div class="text-[0.7rem] space-y-1">
+            <div class="flex justify-between"><span class="text-[#6b7280]">Dimension</span><span class="text-[#8b5cf6] font-bold">4D</span></div>
+            <div class="flex justify-between"><span class="text-[#6b7280]">State</span><span class="text-[#e2e8f0]">Navigating</span></div>
+            <div class="flex justify-between"><span class="text-[#6b7280]">Stability</span><span class="text-[#4ade80]">97.3%</span></div>
+            <div class="flex justify-between items-center mt-1 pt-1 border-t border-[#1e1e2a]">
+              <span class="text-[#6b7280]">4D Puzzle</span>
+              <span class="text-[0.6rem] text-[#22d3ee] flex items-center gap-1">◆ ROTATING</span>
+            </div>
+          </div>
+        </div>
 
-<script src="script.js"></script>
+        <!-- O2Jam -->
+        <div class="act-card">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[0.65rem] text-[#6b7280] tracking-[1px]">RHYTHM</span>
+            <span class="text-lg">🎵</span>
+          </div>
+          <div class="text-[0.7rem] space-y-1">
+            <div class="flex justify-between"><span class="text-[#6b7280]">Game</span><span class="text-[#e2e8f0]">O2Jam</span></div>
+            <div class="flex justify-between"><span class="text-[#6b7280]">Rank</span><span class="text-[#f472b6] font-bold">S4</span></div>
+            <div class="flex justify-between"><span class="text-[#6b7280]">Accuracy</span><span class="text-[#22d3ee]">96.8%</span></div>
+            <div class="flex justify-between items-center mt-1 pt-1 border-t border-[#1e1e2a]">
+              <span class="text-[#6b7280]">Max Combo</span>
+              <span class="text-[#e2e8f0]">1,247</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Security -->
+        <div class="act-card">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[0.65rem] text-[#6b7280] tracking-[1px]">SECURITY</span>
+            <span class="text-lg">🛡️</span>
+          </div>
+          <div class="text-[0.7rem] space-y-1">
+            <div class="flex justify-between"><span class="text-[#6b7280]">Platform</span><span class="text-[#e2e8f0]">Dreamhack</span></div>
+            <div class="flex justify-between"><span class="text-[#6b7280]">Level</span><span class="text-[#4ade80] font-bold">A2</span></div>
+            <div class="flex justify-between"><span class="text-[#6b7280]">Points</span><span class="text-[#22d3ee]">4,280</span></div>
+            <div class="flex justify-between items-center mt-1 pt-1 border-t border-[#1e1e2a]">
+              <span class="text-[#6b7280]">Spec</span>
+              <span class="text-[0.6rem] text-[#e2e8f0]">Pwnable / Reversing</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════
+         ANTI-NOISE MATRIX
+         ════════════════════════════════ -->
+    <div class="mt-8">
+      <div class="text-[0.7rem] text-[#6b7280] tracking-[1px] mb-3">ANTI-NOISE MATRIX  ──  AD / TRACKER FILTER ACTIVE</div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+
+        <!-- Spotify -->
+        <div class="widget-box flex items-center gap-3">
+          <span class="text-lg">🎧</span>
+          <div class="flex-1 min-w-0">
+            <div class="text-[0.6rem] text-[#6b7280] tracking-[1px]">NOW PLAYING</div>
+            <div class="text-[0.8rem] text-[#e2e8f0] truncate font-medium">Synthwave Sunset</div>
+            <div class="text-[0.65rem] text-[#4b5563] truncate">lofi / chillstep radio</div>
+          </div>
+          <span class="text-[0.55rem] text-[#4ade80] px-1.5 py-0.5 border border-[#2a2a3a] rounded">▶ LIVE</span>
+        </div>
+
+        <!-- Laftel -->
+        <div class="widget-box flex items-center gap-3">
+          <span class="text-lg">📺</span>
+          <div class="flex-1 min-w-0">
+            <div class="text-[0.6rem] text-[#6b7280] tracking-[1px]">LAFTEL D-DAY</div>
+            <div class="text-[0.75rem] text-[#e2e8f0] font-medium">D-<span id="laftel-dday">12</span></div>
+            <div class="text-[0.65rem] text-[#4b5563] truncate">기대작: 시즌2 공개</div>
+          </div>
+          <span class="text-[0.55rem] text-[#22d3ee] px-1.5 py-0.5 border border-[#2a2a3a] rounded">◉ ON AIR</span>
+        </div>
+
+        <!-- Brave Tracker -->
+        <div class="widget-box flex items-center gap-3">
+          <span class="text-lg">🛡️</span>
+          <div class="flex-1 min-w-0">
+            <div class="text-[0.6rem] text-[#6b7280] tracking-[1px]">TRACKERS BLOCKED</div>
+            <div class="text-[0.8rem] text-[#e2e8f0] font-medium"><span id="tracker-count">0</span> blocked</div>
+            <div class="text-[0.65rem] text-[#4b5563]">this session</div>
+          </div>
+          <span class="text-[0.55rem] text-[#f472b6] px-1.5 py-0.5 border border-[#2a2a3a] rounded">✕ AD</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════
+         FOOTER: status line (vim-style)
+         ════════════════════════════════ -->
+    <footer class="mt-auto pt-8 flex flex-wrap items-center justify-between text-[0.65rem] text-[#4b5563] border-t border-[#1e1e2a]">
+      <div class="flex items-center gap-3 flex-wrap">
+        <span class="text-[#6b7280]">◆</span>
+        <span class="text-[#4ade80]" id="footer-mode">NORMAL</span>
+        <span>mode</span>
+        <span class="text-[#6b7280]">|</span>
+        <span id="footer-uptime">UP 00:00:00</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span>●</span>
+        <span>Neovim</span>
+        <span class="text-[#6b7280]">|</span>
+        <span>v1.0.0</span>
+      </div>
+    </footer>
+
+  </div>
+
+  <script>
+  (function () {
+    /* ── TL;DR Toggle ── */
+    const texts = {
+      tldr: '보안 연구하는 사람. 커널과 취약점 사이를 탐험 중입니다.',
+      normal: '리눅스 환경에서 시스템 보안과 프로그래밍을 공부하고 있어요. CTF 대회에 참여하고, AI 프롬프트 디자인과 파이썬 자동화에도 관심이 많습니다. 주로 커널 영역과 취약점 분석을 중심으로 탐구 중입니다.',
+      mz: '커널부터 웹까지 다 긁는 보안덕후 🖤 CTF도 뛰고 AI도 굴리고 체스도 둠 ㅋㅋ 요즘 4D 하이퍼큐브에 빠져서 정신없는데 재밌으니까 된거지 ~',
+    };
+    const tabGroup = document.getElementById('tab-group');
+    const textEl = document.getElementById('tldr-text');
+    let currentMode = 'tldr';
+
+    textEl.textContent = texts.tldr;
+
+    tabGroup.addEventListener('click', function (e) {
+      const btn = e.target.closest('.tab-btn');
+      if (!btn) return;
+      const mode = btn.dataset.mode;
+      if (mode === currentMode) return;
+      currentMode = mode;
+
+      tabGroup.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      textEl.classList.add('fade');
+      setTimeout(function () {
+        textEl.textContent = texts[mode];
+        textEl.classList.remove('fade');
+      }, 150);
+
+      const footerMode = document.getElementById('footer-mode');
+      if (footerMode) footerMode.textContent = mode.toUpperCase();
+    });
+
+    /* ── Uptime ── */
+    (function startUptime() {
+      const start = Date.now();
+      const display = document.getElementById('uptime-display');
+      const footerUptime = document.getElementById('footer-uptime');
+      function pad(n) { return String(n).padStart(2, '0'); }
+      function tick() {
+        var s = Math.floor((Date.now() - start) / 1000);
+        var h = Math.floor(s / 3600);
+        var m = Math.floor((s % 3600) / 60);
+        var sec = s % 60;
+        var str = pad(h) + ':' + pad(m) + ':' + pad(sec);
+        if (display) display.textContent = str;
+        if (footerUptime) footerUptime.textContent = 'UP ' + str;
+      }
+      tick();
+      setInterval(tick, 1000);
+    })();
+
+    /* ── Brave Tracker Counter ── */
+    (function startTracker() {
+      var count = 0;
+      var el = document.getElementById('tracker-count');
+      if (!el) return;
+      function increment() {
+        count += Math.floor(Math.random() * 3) + 1;
+        el.textContent = count;
+        el.classList.remove('count-pop');
+        void el.offsetWidth; // reflow
+        el.classList.add('count-pop');
+      }
+      increment();
+      setInterval(increment, 3000 + Math.random() * 4000);
+    })();
+
+    /* ── Laftel D-Day random variation ── */
+    (function () {
+      var el = document.getElementById('laftel-dday');
+      if (!el) return;
+      var d = parseInt(el.textContent, 10);
+      setInterval(function () {
+        d = Math.max(2, d + (Math.random() > 0.5 ? -1 : 0));
+        el.textContent = d;
+      }, 8000);
+    })();
+
+  })();
+  </script>
+
 </body>
 </html>
