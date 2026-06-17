@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Σ SIGMA — personal analytics</title>
+  <title>Σ SIGMA — spidychoipro</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -22,6 +22,7 @@
       --accent:      #3b82f6;
       --green:       #34d399;
       --red:         #f87171;
+      --yellow:      #fbbf24;
       --font: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
       --mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
     }
@@ -53,24 +54,6 @@
       .app { padding: 1.25rem 1rem 0.75rem; }
     }
 
-    /* ── Header ── */
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      padding-bottom: 0.75rem;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 2.5rem;
-      flex-wrap: wrap;
-      gap: 0.4rem;
-    }
-
-    .header-left {
-      display: flex;
-      align-items: baseline;
-      gap: 0.5rem;
-    }
-
     .sigma {
       font-size: 1.1rem;
       font-weight: 700;
@@ -84,6 +67,24 @@
       letter-spacing: 0.3px;
     }
 
+    /* ── Header ── */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+    }
+
     .header-right {
       font-size: 0.72rem;
       color: var(--text-sec);
@@ -91,19 +92,27 @@
       font-variant-numeric: tabular-nums;
     }
 
-    /* ── Hero Score ── */
-    .hero {
-      text-align: center;
-      padding: 2rem 1rem 2.5rem;
-      border: 1px solid var(--border);
-      border-radius: 12px;
+    /* ── Identity Hero ── */
+    .identity {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      margin-bottom: 2rem;
+      padding: 0;
+    }
+
+    .identity-card {
+      flex: 1;
+      min-width: 280px;
       background: var(--surface);
-      margin-bottom: 2.5rem;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem;
       position: relative;
       overflow: hidden;
     }
 
-    .hero::before {
+    .identity-card::before {
       content: '';
       position: absolute;
       top: 0; left: 0; right: 0;
@@ -112,47 +121,65 @@
       opacity: 0.3;
     }
 
-    .hero-number {
+    .identity-line {
       font-family: var(--mono);
-      font-size: 5rem;
-      font-weight: 700;
-      line-height: 1;
-      letter-spacing: -2px;
+      font-size: 0.82rem;
+      padding: 3px 0;
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .identity-line .prompt {
+      color: var(--green);
+      flex-shrink: 0;
+    }
+
+    .identity-line .value {
       color: var(--text);
     }
 
-    .hero-label {
-      font-size: 0.75rem;
-      font-weight: 600;
-      letter-spacing: 2.5px;
+    .identity-line .muted {
       color: var(--text-muted);
-      text-transform: uppercase;
-      margin-top: 0.5rem;
     }
 
-    .hero-meta {
+    .identity-line .accent {
+      color: var(--accent);
+    }
+
+    .identity-quote {
+      margin-top: 0.75rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--border);
       font-size: 0.78rem;
       color: var(--text-sec);
-      margin-top: 0.75rem;
+      font-style: italic;
+    }
+
+    /* Quick Stats Mini Row */
+    .quick-row {
       display: flex;
-      justify-content: center;
-      gap: 1.5rem;
+      gap: 0.5rem;
       flex-wrap: wrap;
+      margin-bottom: 2rem;
     }
 
-    .hero-meta span {
-      display: flex;
-      align-items: center;
-      gap: 0.3rem;
+    .quick-chip {
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.45rem 0.9rem;
+      font-size: 0.72rem;
+      font-family: var(--mono);
+      color: var(--text-sec);
+      transition: border-color 0.2s, color 0.2s;
     }
 
-    .hero-meta .up   { color: var(--green); }
-    .hero-meta .down { color: var(--red); }
-
-    @media (max-width: 640px) {
-      .hero-number { font-size: 3.5rem; }
-      .hero { padding: 1.5rem 0.75rem 2rem; }
+    .quick-chip:hover {
+      border-color: var(--accent);
+      color: var(--text);
     }
+
+    .quick-chip .hl { color: var(--accent); }
 
     /* ── Section ── */
     .section {
@@ -180,33 +207,25 @@
       background: var(--border);
     }
 
-    /* ── Allocations Table ── */
-    .alloc-table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    .alloc-table tr {
+    /* ── Allocations ── */
+    .alloc-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.7rem 0;
       border-bottom: 1px solid var(--border);
       transition: background 0.15s;
-    }
-
-    .alloc-table tr:last-child { border-bottom: none; }
-    .alloc-table tr:hover { background: var(--surface-alt); }
-
-    .alloc-table td {
-      padding: 0.7rem 0.5rem;
       font-size: 0.82rem;
-      vertical-align: middle;
     }
 
-    .alloc-table td:first-child { padding-left: 0; }
-    .alloc-table td:last-child  { padding-right: 0; }
+    .alloc-row:last-child { border-bottom: none; }
+    .alloc-row:hover { background: var(--surface-alt); margin: 0 -0.5rem; padding: 0.7rem 0.5rem; border-radius: 6px; }
 
     .alloc-name {
       font-weight: 500;
       color: var(--text);
       width: 8rem;
+      flex-shrink: 0;
     }
 
     .alloc-pct {
@@ -214,11 +233,12 @@
       color: var(--text-sec);
       width: 3.5rem;
       font-size: 0.78rem;
+      flex-shrink: 0;
     }
 
     .alloc-bar-wrap {
       flex: 1;
-      min-width: 100px;
+      min-width: 60px;
     }
 
     .alloc-bar {
@@ -241,6 +261,7 @@
       font-size: 0.75rem;
       width: 5rem;
       text-align: right;
+      flex-shrink: 0;
     }
 
     .alloc-change.up   { color: var(--green); }
@@ -250,6 +271,7 @@
       font-size: 0.65rem;
       width: 4rem;
       text-align: right;
+      flex-shrink: 0;
     }
 
     .status-dot {
@@ -262,26 +284,14 @@
 
     .status-dot.active { background: var(--green); }
     .status-dot.idle   { background: var(--text-muted); }
-
-    .alloc-row {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      padding: 0.7rem 0;
-      border-bottom: 1px solid var(--border);
-      transition: background 0.15s;
-      font-size: 0.82rem;
-    }
-
-    .alloc-row:last-child { border-bottom: none; }
-    .alloc-row:hover { background: var(--surface-alt); margin: 0 -0.5rem; padding: 0.7rem 0.5rem; border-radius: 4px; }
+    .status-dot.warn   { background: var(--yellow); }
 
     @media (max-width: 640px) {
       .alloc-change { display: none; }
       .alloc-status { width: auto; }
     }
 
-    /* ── Two column ── */
+    /* ── Two Column ── */
     .two-col {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -292,92 +302,37 @@
       .two-col { grid-template-columns: 1fr; gap: 1.5rem; }
     }
 
-    /* ── Rhythm Chart (CSS bars) ── */
-    .rhythm-grid {
-      display: flex;
-      gap: 0.5rem;
-      align-items: flex-end;
-      height: 120px;
-      padding-top: 0.5rem;
-    }
-
-    .rhythm-col {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.3rem;
-      height: 100%;
-      justify-content: flex-end;
-    }
-
-    .rhythm-bar {
-      width: 100%;
-      max-width: 36px;
-      border-radius: 3px 3px 0 0;
-      background: var(--border-lt);
-      transition: background 0.3s, height 0.8s cubic-bezier(0.22, 1, 0.36, 1);
-      min-height: 4px;
-    }
-
-    .rhythm-bar.today { background: var(--accent); }
-    .rhythm-bar:hover { background: var(--accent); opacity: 0.8; }
-
-    .rhythm-day {
-      font-family: var(--mono);
-      font-size: 0.6rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-    }
-
-    .rhythm-val {
-      font-family: var(--mono);
-      font-size: 0.65rem;
-      color: var(--text-sec);
-    }
-
-    /* ── Summary metrics ── */
-    .summary-grid {
+    /* ── Tools Grid ── */
+    .tools-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.75rem;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 0.6rem;
     }
 
-    .summary-card {
+    .tool-item {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 1rem;
+      border-radius: 6px;
+      padding: 0.7rem 0.9rem;
+      transition: border-color 0.2s;
     }
 
-    .summary-card-label {
-      font-size: 0.6rem;
-      font-weight: 600;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      margin-bottom: 0.3rem;
+    .tool-item:hover {
+      border-color: var(--accent);
     }
 
-    .summary-card-value {
+    .tool-name {
       font-family: var(--mono);
-      font-size: 1.4rem;
-      font-weight: 600;
+      font-size: 0.78rem;
       color: var(--text);
-      line-height: 1.2;
     }
 
-    .summary-card-sub {
-      font-size: 0.7rem;
-      color: var(--text-sec);
-      margin-top: 0.2rem;
-    }
-
-    .summary-card-sub .up   { color: var(--green); }
-    .summary-card-sub .down { color: var(--red); }
-
-    @media (max-width: 640px) {
-      .summary-grid { grid-template-columns: 1fr; }
+    .tool-role {
+      font-size: 0.6rem;
+      color: var(--text-muted);
+      margin-top: 0.15rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     /* ── Activity Log ── */
@@ -397,7 +352,7 @@
     }
 
     .log-item:last-child { border-bottom: none; }
-    .log-item:hover { background: var(--surface-alt); margin: 0 -0.5rem; padding: 0.5rem 0.5rem; border-radius: 4px; }
+    .log-item:hover { background: var(--surface-alt); margin: 0 -0.5rem; padding: 0.5rem 0.5rem; border-radius: 6px; }
 
     .log-time {
       font-family: var(--mono);
@@ -415,24 +370,50 @@
       text-overflow: ellipsis;
     }
 
-    .log-dur {
-      font-family: var(--mono);
-      font-size: 0.7rem;
-      color: var(--text-sec);
-      width: 4rem;
-      text-align: right;
+    .log-tag {
+      font-size: 0.6rem;
+      padding: 0.1rem 0.5rem;
+      border-radius: 3px;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
       flex-shrink: 0;
     }
 
-    .log-mark {
-      font-size: 0.65rem;
-      width: 1.5rem;
-      text-align: center;
-      flex-shrink: 0;
+    .log-tag.python { border-color: rgba(59,130,246,0.3); color: var(--accent); }
+    .log-tag.sec    { border-color: rgba(251,191,36,0.3); color: var(--yellow); }
+    .log-tag.linux  { border-color: rgba(52,211,153,0.3); color: var(--green); }
+
+    @media (max-width: 640px) {
+      .log-tag { display: none; }
     }
 
-    .log-mark.star  { color: var(--accent); }
-    .log-mark.check { color: var(--green); }
+    /* ── Goals ── */
+    .goals-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .goal-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.6rem 1rem;
+      font-size: 0.78rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: border-color 0.2s;
+    }
+
+    .goal-item:hover {
+      border-color: var(--accent);
+    }
+
+    .goal-bullet {
+      color: var(--accent);
+      font-size: 0.6rem;
+    }
 
     /* ── Footer ── */
     .footer {
@@ -473,150 +454,138 @@
       0%, 100% { opacity: 1; }
       50% { opacity: 0.3; }
     }
-
-    /* ── Responsive tweaks ── */
-    @media (max-width: 640px) {
-      .log-time { width: 3.5rem; }
-      .log-dur { display: none; }
-    }
   </style>
 </head>
 <body>
   <div class="app">
 
-    <!-- ════════════════════════════════
-         HEADER
-         ════════════════════════════════ -->
+    <!-- ═══════════ HEADER ═══════════ -->
     <header class="header">
       <div class="header-left">
         <span class="sigma">Σ SIGMA</span>
-        <span class="sigma-tagline">personal analytics</span>
+        <span class="sigma-tagline">spidychoipro · profile</span>
       </div>
-      <div class="header-right" id="header-date">17 JUN 2026</div>
+      <div class="header-right" id="header-date"></div>
     </header>
 
-    <!-- ════════════════════════════════
-         HERO
-         ════════════════════════════════ -->
-    <section class="hero">
-      <div class="hero-number" id="hero-score">74</div>
-      <div class="hero-label">Consistency Score</div>
-      <div class="hero-meta">
-        <span class="up">▲ 2.1% vs last week</span>
-        <span>Peak 82</span>
-        <span><span class="footer-dot" style="display:inline-block;width:6px;height:6px"></span> 17-day streak</span>
+    <!-- ═══════════ IDENTITY HERO ═══════════ -->
+    <section class="identity">
+      <div class="identity-card">
+        <div class="identity-line"><span class="prompt">$ whoami</span><span class="value">spidychoipro</span></div>
+        <div class="identity-line"><span class="prompt">$ main_os</span><span class="value">Windows</span></div>
+        <div class="identity-line"><span class="prompt">$ secondary_os</span><span class="value">EndeavourOS <span class="muted">(Arch-based)</span></span></div>
+        <div class="identity-line"><span class="prompt">$ shell</span><span class="value">Neovim <span class="muted">+</span> Hyprland</span></div>
+        <div class="identity-line"><span class="prompt">$ philosophy</span><span class="value accent">"Looks good, but must be usable."</span></div>
+      </div>
+      <div class="identity-card">
+        <div class="identity-line"><span class="prompt">▸</span><span class="value">Currently learning <span class="accent">Python</span></span></div>
+        <div class="identity-line"><span class="prompt">▸</span><span class="value">Exploring <span class="accent">Linux</span> &amp; terminal workflow</span></div>
+        <div class="identity-line"><span class="prompt">▸</span><span class="value">Interested in <span class="accent">Cybersecurity</span></span></div>
+        <div class="identity-line"><span class="prompt">▸</span><span class="value">Learning by breaking things and fixing them</span></div>
+        <div class="identity-quote">I use Vim/Neovim btw 🔥</div>
       </div>
     </section>
 
-    <!-- ════════════════════════════════
-         ALLOCATIONS
-         ════════════════════════════════ -->
+    <!-- ═══════════ QUICK STATS ═══════════ -->
+    <div class="quick-row">
+      <span class="quick-chip"><span class="hl">◆</span> Python</span>
+      <span class="quick-chip"><span class="hl">◆</span> Linux</span>
+      <span class="quick-chip"><span class="hl">◆</span> Cybersecurity</span>
+      <span class="quick-chip"><span class="hl">◆</span> AI</span>
+      <span class="quick-chip"><span class="hl">◆</span> Neovim</span>
+      <span class="quick-chip"><span class="hl">◆</span> Hyprland</span>
+    </div>
+
+    <!-- ═══════════ ALLOCATIONS (Interests as Portfolio) ═══════════ -->
     <section class="section">
       <div class="section-header">
-        <span class="section-title">Allocations</span>
+        <span class="section-title">Interest Allocation</span>
         <span class="section-line"></span>
       </div>
 
       <div id="alloc-container">
 
         <div class="alloc-row">
-          <span class="alloc-name">Security</span>
-          <span class="alloc-pct" id="pct-0">74%</span>
+          <span class="alloc-name">Python</span>
+          <span class="alloc-pct" id="pct-0">85%</span>
           <div class="alloc-bar-wrap"><div class="alloc-bar"><div class="alloc-bar-fill" id="bar-0"></div></div></div>
-          <span class="alloc-change up">▲2.1%</span>
-          <span class="alloc-status"><span class="status-dot active"></span>Active</span>
+          <span class="alloc-change up">▲ active</span>
+          <span class="alloc-status"><span class="status-dot active"></span>Learning</span>
         </div>
 
         <div class="alloc-row">
-          <span class="alloc-name">Coding</span>
-          <span class="alloc-pct" id="pct-1">65%</span>
+          <span class="alloc-name">Linux &amp; Terminal</span>
+          <span class="alloc-pct" id="pct-1">72%</span>
           <div class="alloc-bar-wrap"><div class="alloc-bar"><div class="alloc-bar-fill" id="bar-1"></div></div></div>
-          <span class="alloc-change up">▲0.8%</span>
+          <span class="alloc-change up">▲ exploring</span>
           <span class="alloc-status"><span class="status-dot active"></span>Active</span>
         </div>
 
         <div class="alloc-row">
-          <span class="alloc-name">Reading</span>
-          <span class="alloc-pct" id="pct-2">82%</span>
+          <span class="alloc-name">Cybersecurity</span>
+          <span class="alloc-pct" id="pct-2">60%</span>
           <div class="alloc-bar-wrap"><div class="alloc-bar"><div class="alloc-bar-fill" id="bar-2"></div></div></div>
-          <span class="alloc-change up">▲3.2%</span>
-          <span class="alloc-status"><span class="status-dot active"></span>Active</span>
+          <span class="alloc-change up">▲ growing</span>
+          <span class="alloc-status"><span class="status-dot active"></span>Learning</span>
         </div>
 
         <div class="alloc-row">
-          <span class="alloc-name">Chess</span>
-          <span class="alloc-pct" id="pct-3">42%</span>
+          <span class="alloc-name">AI / ML</span>
+          <span class="alloc-pct" id="pct-3">45%</span>
           <div class="alloc-bar-wrap"><div class="alloc-bar"><div class="alloc-bar-fill" id="bar-3"></div></div></div>
-          <span class="alloc-change down">▼1.2%</span>
-          <span class="alloc-status"><span class="status-dot idle"></span>Idle</span>
+          <span class="alloc-change up">▲ new</span>
+          <span class="alloc-status"><span class="status-dot warn"></span>Exploring</span>
         </div>
 
         <div class="alloc-row">
-          <span class="alloc-name">Exercise</span>
-          <span class="alloc-pct" id="pct-4">30%</span>
+          <span class="alloc-name">Neovim &amp; Hyprland</span>
+          <span class="alloc-pct" id="pct-4">90%</span>
           <div class="alloc-bar-wrap"><div class="alloc-bar"><div class="alloc-bar-fill" id="bar-4"></div></div></div>
-          <span class="alloc-change up">▲0.5%</span>
-          <span class="alloc-status"><span class="status-dot idle"></span>Idle</span>
+          <span class="alloc-change up">▲ daily</span>
+          <span class="alloc-status"><span class="status-dot active"></span>Daily</span>
         </div>
 
       </div>
     </section>
 
-    <!-- ════════════════════════════════
-         TWO-COLUMN: RHYTHM + METRICS
-         ════════════════════════════════ -->
+    <!-- ═══════════ TWO COL: GOALS + TOOLS ═══════════ -->
     <section class="section">
       <div class="section-header">
-        <span class="section-title">Performance</span>
+        <span class="section-title">Current Focus</span>
         <span class="section-line"></span>
       </div>
 
       <div class="two-col">
 
-        <!-- Rhythm Chart -->
-        <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem 1rem 0.75rem;">
-          <div style="font-size:0.65rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:0.5rem;">Weekly Rhythm</div>
-          <div class="rhythm-grid" id="rhythm-grid">
-            <div class="rhythm-col"><div class="rhythm-bar" style="height:80%"></div><span class="rhythm-day">Mon</span><span class="rhythm-val">80%</span></div>
-            <div class="rhythm-col"><div class="rhythm-bar" style="height:78%"></div><span class="rhythm-day">Tue</span><span class="rhythm-val">78%</span></div>
-            <div class="rhythm-col"><div class="rhythm-bar today" style="height:62%"></div><span class="rhythm-day">Wed</span><span class="rhythm-val">62%</span></div>
-            <div class="rhythm-col"><div class="rhythm-bar" style="height:0%"></div><span class="rhythm-day">Thu</span><span class="rhythm-val">—</span></div>
-            <div class="rhythm-col"><div class="rhythm-bar" style="height:0%"></div><span class="rhythm-day">Fri</span><span class="rhythm-val">—</span></div>
-            <div class="rhythm-col"><div class="rhythm-bar" style="height:0%"></div><span class="rhythm-day">Sat</span><span class="rhythm-val">—</span></div>
-            <div class="rhythm-col"><div class="rhythm-bar" style="height:0%"></div><span class="rhythm-day">Sun</span><span class="rhythm-val">—</span></div>
+        <!-- Goals -->
+        <div>
+          <div style="font-size:0.65rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:0.75rem;">🎯 Goals</div>
+          <div class="goals-list">
+            <div class="goal-item"><span class="goal-bullet">▶</span> Improve Python skills</div>
+            <div class="goal-item"><span class="goal-bullet">▶</span> Learn Linux &amp; terminal workflow</div>
+            <div class="goal-item"><span class="goal-bullet">▶</span> Explore Cybersecurity &amp; AI</div>
+            <div class="goal-item"><span class="goal-bullet">▶</span> Build useful small projects</div>
+            <div class="goal-item"><span class="goal-bullet">▶</span> Improve problem-solving skills</div>
           </div>
         </div>
 
-        <!-- Summary cards -->
-        <div class="summary-grid">
-          <div class="summary-card">
-            <div class="summary-card-label">Streak</div>
-            <div class="summary-card-value">17<span style="font-size:0.8rem;color:var(--text-sec);font-weight:400;">d</span></div>
-            <div class="summary-card-sub">Longest: 24d</div>
-          </div>
-          <div class="summary-card">
-            <div class="summary-card-label">Focus Balance</div>
-            <div class="summary-card-value">1.4<span style="font-size:0.8rem;color:var(--text-sec);font-weight:400;">x</span></div>
-            <div class="summary-card-sub">Active / Idle ratio</div>
-          </div>
-          <div class="summary-card">
-            <div class="summary-card-label">Peak Score</div>
-            <div class="summary-card-value">82</div>
-            <div class="summary-card-sub"><span class="up">▲ from 78 last month</span></div>
-          </div>
-          <div class="summary-card">
-            <div class="summary-card-label">Weekly Trend</div>
-            <div class="summary-card-value" style="color:var(--green);">+2.1<span style="font-size:0.8rem;font-weight:400;">%</span></div>
-            <div class="summary-card-sub">3 of 5 disciplines up</div>
+        <!-- Tools -->
+        <div>
+          <div style="font-size:0.65rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:0.75rem;">🛠 Tools &amp; Stack</div>
+          <div class="tools-grid">
+            <div class="tool-item"><div class="tool-name">Neovim</div><div class="tool-role">Editor</div></div>
+            <div class="tool-item"><div class="tool-name">Python</div><div class="tool-role">Language</div></div>
+            <div class="tool-item"><div class="tool-name">Hyprland</div><div class="tool-role">WM / Rice</div></div>
+            <div class="tool-item"><div class="tool-name">EndeavourOS</div><div class="tool-role">Linux Distro</div></div>
+            <div class="tool-item"><div class="tool-name">Git</div><div class="tool-role">Version Control</div></div>
+            <div class="tool-item"><div class="tool-name">Windows Terminal</div><div class="tool-role">Daily Driver</div></div>
           </div>
         </div>
 
       </div>
     </section>
 
-    <!-- ════════════════════════════════
-         ACTIVITY LOG
-         ════════════════════════════════ -->
+    <!-- ═══════════ ACTIVITY LOG ═══════════ -->
     <section class="section">
       <div class="section-header">
         <span class="section-title">Activity Log</span>
@@ -625,55 +594,46 @@
       <div class="log-list">
         <div class="log-item">
           <span class="log-time">17:00</span>
-          <span class="log-desc">CTF writeup 정리 완료</span>
-          <span class="log-dur">+1.2h</span>
-          <span class="log-mark check">●</span>
+          <span class="log-desc">Python — working on small automation scripts</span>
+          <span class="log-tag python">Python</span>
         </div>
         <div class="log-item">
           <span class="log-time">15:30</span>
-          <span class="log-desc">Hypercube 4D — new personal best</span>
-          <span class="log-dur">+0.5h</span>
-          <span class="log-mark star">★</span>
+          <span class="log-desc">Hyprland config — customizing keybinds &amp; workspace</span>
+          <span class="log-tag linux">Linux</span>
         </div>
         <div class="log-item">
           <span class="log-time">12:00</span>
-          <span class="log-desc">Chess session (+8 ELO, 1850 → 1858)</span>
-          <span class="log-dur">+0.5h</span>
-          <span class="log-mark check">●</span>
+          <span class="log-desc">CTF challenge — basic reversing exercise</span>
+          <span class="log-tag sec">Security</span>
         </div>
         <div class="log-item">
           <span class="log-time">10:30</span>
-          <span class="log-desc">Coding — React component library</span>
-          <span class="log-dur">+1.0h</span>
-          <span class="log-mark check">●</span>
+          <span class="log-desc">Neovim — plugin tinkering &amp; config optimization</span>
+          <span class="log-tag linux">Linux</span>
         </div>
         <div class="log-item">
           <span class="log-time">09:00</span>
-          <span class="log-desc">Morning reading / security news</span>
-          <span class="log-dur">+0.5h</span>
-          <span class="log-mark check">●</span>
+          <span class="log-desc">Linux terminal — practicing shell commands &amp; scripting</span>
+          <span class="log-tag python">Python</span>
         </div>
       </div>
     </section>
 
-    <!-- ════════════════════════════════
-         FOOTER
-         ════════════════════════════════ -->
+    <!-- ═══════════ FOOTER ═══════════ -->
     <footer class="footer">
       <div class="footer-left">
         <span class="footer-dot"></span>
-        <span>System Running</span>
+        <span>spidychoipro</span>
         <span>·</span>
-        <span id="footer-uptime">UP 00:00:00</span>
+        <span id="footer-uptime">session 00:00:00</span>
         <span>·</span>
-        <span>Local Data</span>
+        <span>local data</span>
       </div>
       <div class="footer-right">
         <span>Σ v1.0</span>
         <span>·</span>
-        <span>+2.1% w/w</span>
-        <span>·</span>
-        <span>17d</span>
+        <span>neovim btw</span>
       </div>
     </footer>
 
@@ -691,7 +651,7 @@
 
     /* ── animate bars on load ── */
     var barIds = ['bar-0','bar-1','bar-2','bar-3','bar-4'];
-    var targets = [74, 65, 82, 42, 30];
+    var targets = [85, 72, 60, 45, 90];
 
     function animateBars() {
       barIds.forEach(function (id, i) {
@@ -704,7 +664,6 @@
       });
     }
 
-    /* visibility observer to trigger once */
     var observed = false;
     var observer = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
@@ -719,7 +678,6 @@
     var allocContainer = document.getElementById('alloc-container');
     if (allocContainer) observer.observe(allocContainer);
 
-    /* fallback: animate after 500ms anyway */
     setTimeout(function () {
       if (!observed) {
         observed = true;
@@ -736,12 +694,11 @@
       function pad(n) { return String(n).padStart(2, '0'); }
       function tick() {
         var s = Math.floor((Date.now() - start) / 1000);
-        el.textContent = 'UP ' + pad(Math.floor(s / 3600)) + ':' + pad(Math.floor((s % 3600) / 60)) + ':' + pad(s % 60);
+        el.textContent = 'session ' + pad(Math.floor(s / 3600)) + ':' + pad(Math.floor((s % 3600) / 60)) + ':' + pad(s % 60);
       }
       tick();
       setInterval(tick, 1000);
     })();
-
   })();
   </script>
 </body>
