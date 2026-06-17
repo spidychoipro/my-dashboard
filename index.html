@@ -3,340 +3,677 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>hyunseok@endeavouros:~$</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Σ SIGMA — personal analytics</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
-    :root {
-      --accent: #8b5cf6;
-      --green: #4ade80;
-      --cyan: #22d3ee;
-      --pink: #f472b6;
-    }
     * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg:          #08090a;
+      --surface:     #0e0f11;
+      --surface-alt: #15171a;
+      --border:      #1e2025;
+      --border-lt:   #26282e;
+      --text:        #e8eaed;
+      --text-sec:    #8b8f96;
+      --text-muted:  #4e5157;
+      --accent:      #3b82f6;
+      --green:       #34d399;
+      --red:         #f87171;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      --mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+    }
+
+    html { font-size: 15px; }
+
     body {
-      background: #0a0a0f;
-      color: #e2e8f0;
-      font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      line-height: 1.6;
       min-height: 100vh;
       -webkit-font-smoothing: antialiased;
-    }
-    ::selection { background: #8b5cf6; color: #fff; }
-    .glow-purple { box-shadow: 0 0 20px rgba(139,92,246,0.06); }
-    .glow-purple:hover { box-shadow: 0 0 30px rgba(139,92,246,0.15); }
-    .glow-green { box-shadow: 0 0 12px rgba(74,222,128,0.06); }
-    .glow-green:hover { box-shadow: 0 0 20px rgba(74,222,128,0.12); }
-    .border-accent { border-color: #2a2a3a; }
-    .border-accent:hover { border-color: #8b5cf6; }
-
-    /* TL;DR tab buttons */
-    .tab-btn {
-      padding: 6px 18px;
-      font-size: 0.75rem;
-      font-family: inherit;
-      border: 1px solid #2a2a3a;
-      background: transparent;
-      color: #6b7280;
-      cursor: pointer;
-      transition: all 0.2s;
-      border-radius: 4px;
-      letter-spacing: 1px;
-      font-weight: 600;
-    }
-    .tab-btn:hover { color: #e2e8f0; border-color: #4b5563; }
-    .tab-btn.active {
-      color: #e2e8f0;
-      border-color: #8b5cf6;
-      background: rgba(139,92,246,0.1);
+      -moz-osx-font-smoothing: grayscale;
     }
 
-    /* TL;DR content transition */
-    .tldr-content {
-      transition: opacity 0.25s ease, transform 0.25s ease;
-    }
-    .tldr-content.fade {
-      opacity: 0;
-      transform: translateY(6px);
+    ::selection { background: rgba(59, 130, 246, 0.25); color: #fff; }
+
+    .app {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 2rem 2rem 1rem;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
-    /* Signal dot pulse */
-    @keyframes pulse-dot {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.35; }
+    @media (max-width: 640px) {
+      .app { padding: 1.25rem 1rem 0.75rem; }
     }
-    .dot-pulse { animation: pulse-dot 2s ease-in-out infinite; }
 
-    /* Cursor blink */
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0; }
+    /* ── Header ── */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2.5rem;
+      flex-wrap: wrap;
+      gap: 0.4rem;
     }
-    .cursor-blink { animation: blink 1s step-end infinite; }
 
-    /* Tracker counter increment effect */
-    @keyframes count-pop {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.08); }
-      100% { transform: scale(1); }
+    .header-left {
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
     }
-    .count-pop { animation: count-pop 0.2s ease; }
 
-    /* ASCII art container */
-    .ascii-box {
-      line-height: 1.3;
+    .sigma {
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      color: var(--text);
+    }
+
+    .sigma-tagline {
       font-size: 0.7rem;
-      white-space: pre;
-      color: #8b5cf6;
+      color: var(--text-muted);
+      letter-spacing: 0.3px;
     }
 
-    /* Activity card */
-    .act-card {
-      background: #101016;
-      border: 1px solid #2a2a3a;
+    .header-right {
+      font-size: 0.72rem;
+      color: var(--text-sec);
+      font-family: var(--mono);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ── Hero Score ── */
+    .hero {
+      text-align: center;
+      padding: 2rem 1rem 2.5rem;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--surface);
+      margin-bottom: 2.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      opacity: 0.3;
+    }
+
+    .hero-number {
+      font-family: var(--mono);
+      font-size: 5rem;
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -2px;
+      color: var(--text);
+    }
+
+    .hero-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 2.5px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-top: 0.5rem;
+    }
+
+    .hero-meta {
+      font-size: 0.78rem;
+      color: var(--text-sec);
+      margin-top: 0.75rem;
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .hero-meta span {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .hero-meta .up   { color: var(--green); }
+    .hero-meta .down { color: var(--red); }
+
+    @media (max-width: 640px) {
+      .hero-number { font-size: 3.5rem; }
+      .hero { padding: 1.5rem 0.75rem 2rem; }
+    }
+
+    /* ── Section ── */
+    .section {
+      margin-bottom: 2rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .section-line {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── Allocations Table ── */
+    .alloc-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .alloc-table tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+    }
+
+    .alloc-table tr:last-child { border-bottom: none; }
+    .alloc-table tr:hover { background: var(--surface-alt); }
+
+    .alloc-table td {
+      padding: 0.7rem 0.5rem;
+      font-size: 0.82rem;
+      vertical-align: middle;
+    }
+
+    .alloc-table td:first-child { padding-left: 0; }
+    .alloc-table td:last-child  { padding-right: 0; }
+
+    .alloc-name {
+      font-weight: 500;
+      color: var(--text);
+      width: 8rem;
+    }
+
+    .alloc-pct {
+      font-family: var(--mono);
+      color: var(--text-sec);
+      width: 3.5rem;
+      font-size: 0.78rem;
+    }
+
+    .alloc-bar-wrap {
+      flex: 1;
+      min-width: 100px;
+    }
+
+    .alloc-bar {
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .alloc-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      background: var(--accent);
+      width: 0%;
+      transition: width 1s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .alloc-change {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      width: 5rem;
+      text-align: right;
+    }
+
+    .alloc-change.up   { color: var(--green); }
+    .alloc-change.down { color: var(--red); }
+
+    .alloc-status {
+      font-size: 0.65rem;
+      width: 4rem;
+      text-align: right;
+    }
+
+    .status-dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      margin-right: 0.3rem;
+    }
+
+    .status-dot.active { background: var(--green); }
+    .status-dot.idle   { background: var(--text-muted); }
+
+    .alloc-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.7rem 0;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+      font-size: 0.82rem;
+    }
+
+    .alloc-row:last-child { border-bottom: none; }
+    .alloc-row:hover { background: var(--surface-alt); margin: 0 -0.5rem; padding: 0.7rem 0.5rem; border-radius: 4px; }
+
+    @media (max-width: 640px) {
+      .alloc-change { display: none; }
+      .alloc-status { width: auto; }
+    }
+
+    /* ── Two column ── */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .two-col { grid-template-columns: 1fr; gap: 1.5rem; }
+    }
+
+    /* ── Rhythm Chart (CSS bars) ── */
+    .rhythm-grid {
+      display: flex;
+      gap: 0.5rem;
+      align-items: flex-end;
+      height: 120px;
+      padding-top: 0.5rem;
+    }
+
+    .rhythm-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.3rem;
+      height: 100%;
+      justify-content: flex-end;
+    }
+
+    .rhythm-bar {
+      width: 100%;
+      max-width: 36px;
+      border-radius: 3px 3px 0 0;
+      background: var(--border-lt);
+      transition: background 0.3s, height 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+      min-height: 4px;
+    }
+
+    .rhythm-bar.today { background: var(--accent); }
+    .rhythm-bar:hover { background: var(--accent); opacity: 0.8; }
+
+    .rhythm-day {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .rhythm-val {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--text-sec);
+    }
+
+    /* ── Summary metrics ── */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    .summary-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
       border-radius: 8px;
       padding: 1rem;
-      transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
-    }
-    .act-card:hover {
-      border-color: #8b5cf6;
-      box-shadow: 0 0 25px rgba(139,92,246,0.08);
-      transform: translateY(-2px);
     }
 
-    /* Widget box for anti-noise */
-    .widget-box {
-      background: #101016;
-      border: 1px solid #2a2a3a;
-      border-radius: 6px;
-      padding: 0.75rem 1rem;
-      transition: border-color 0.2s;
+    .summary-card-label {
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.3rem;
     }
-    .widget-box:hover { border-color: #4b5563; }
 
-    /* Scrollbar */
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: #2a2a3a; border-radius: 2px; }
+    .summary-card-value {
+      font-family: var(--mono);
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.2;
+    }
 
-    /* Responsive ASCII */
+    .summary-card-sub {
+      font-size: 0.7rem;
+      color: var(--text-sec);
+      margin-top: 0.2rem;
+    }
+
+    .summary-card-sub .up   { color: var(--green); }
+    .summary-card-sub .down { color: var(--red); }
+
     @media (max-width: 640px) {
-      .ascii-box { font-size: 0.6rem; }
+      .summary-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── Activity Log ── */
+    .log-list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .log-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.8rem;
+      transition: background 0.15s;
+    }
+
+    .log-item:last-child { border-bottom: none; }
+    .log-item:hover { background: var(--surface-alt); margin: 0 -0.5rem; padding: 0.5rem 0.5rem; border-radius: 4px; }
+
+    .log-time {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      width: 4.5rem;
+      flex-shrink: 0;
+    }
+
+    .log-desc {
+      flex: 1;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .log-dur {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--text-sec);
+      width: 4rem;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .log-mark {
+      font-size: 0.65rem;
+      width: 1.5rem;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .log-mark.star  { color: var(--accent); }
+    .log-mark.check { color: var(--green); }
+
+    /* ── Footer ── */
+    .footer {
+      margin-top: auto;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      flex-wrap: wrap;
+      gap: 0.3rem;
+    }
+
+    .footer-left {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .footer-right {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .footer-dot {
+      display: inline-block;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: pulse-dot 2.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* ── Responsive tweaks ── */
+    @media (max-width: 640px) {
+      .log-time { width: 3.5rem; }
+      .log-dur { display: none; }
     }
   </style>
 </head>
 <body>
-
-  <div class="max-w-5xl mx-auto px-4 py-6 md:py-10 flex flex-col min-h-screen">
-
-    <!-- ════════════════════════════════
-         HEADER: terminal prompt
-         ════════════════════════════════ -->
-    <div class="flex items-center gap-2 text-sm mb-2 flex-wrap">
-      <span class="text-[#4ade80] font-bold">hyunseok</span>
-      <span class="text-[#6b7280]">@</span>
-      <span class="text-[#8b5cf6] font-bold">endeavouros</span>
-      <span class="text-[#6b7280]">:</span>
-      <span class="text-[#22d3ee]">~$</span>
-      <span class="text-[#e2e8f0] cursor-blink">_</span>
-    </div>
+  <div class="app">
 
     <!-- ════════════════════════════════
-         NEOFETCH SECTION
+         HEADER
          ════════════════════════════════ -->
-    <div class="flex flex-wrap gap-6 md:gap-10 items-start mt-2 p-4 md:p-6 border border-[#2a2a3a] rounded-lg glow-purple bg-[#0c0c12]">
-      <!-- ASCII art -->
-      <div class="ascii-box shrink-0 select-none leading-[1.35] text-[0.7rem] md:text-[0.75rem]">
-╭──────────────────╮
-│  >_              │
-│  ──────────────  │
-│  ENDEAVOUR       │
-│  NEOTERM  v2.4   │
-│  ──────────────  │
-│  [●] ACTIVE      │
-╰──────────────────╯
+    <header class="header">
+      <div class="header-left">
+        <span class="sigma">Σ SIGMA</span>
+        <span class="sigma-tagline">personal analytics</span>
       </div>
-
-      <!-- System info -->
-      <div class="flex-1 min-w-0 text-sm space-y-1.5">
-        <div class="flex gap-3">
-          <span class="text-[#6b7280] w-[9ch] shrink-0">Name</span>
-          <span class="text-[#e2e8f0] font-medium">Hyunseok Choi (최현석)</span>
-        </div>
-        <div class="flex gap-3">
-          <span class="text-[#6b7280] w-[9ch] shrink-0">OS</span>
-          <span class="text-[#4ade80]">EndeavourOS <span class="text-[#6b7280]">(Linux 6.x)</span></span>
-        </div>
-        <div class="flex gap-3">
-          <span class="text-[#6b7280] w-[9ch] shrink-0">Core</span>
-          <span class="text-[#e2e8f0]">Python · Security/CTF · AI Prompt · Neovim</span>
-        </div>
-        <div class="flex gap-3">
-          <span class="text-[#6b7280] w-[9ch] shrink-0">Uptime</span>
-          <span class="text-[#22d3ee]" id="uptime-display">00:00:00</span>
-        </div>
-        <div class="flex gap-3">
-          <span class="text-[#6b7280] w-[9ch] shrink-0">Session</span>
-          <span class="text-[#e2e8f0]">interactive</span>
-          <span class="text-[#4ade80] text-[0.7rem] self-center flex items-center gap-1.5 ml-1">
-            <span class="inline-block w-2 h-2 rounded-full bg-[#4ade80] dot-pulse"></span> ONLINE
-          </span>
-        </div>
-      </div>
-    </div>
+      <div class="header-right" id="header-date">17 JUN 2026</div>
+    </header>
 
     <!-- ════════════════════════════════
-         TL;DR TOGGLE
+         HERO
          ════════════════════════════════ -->
-    <div class="mt-8">
-      <div class="flex gap-2" id="tab-group">
-        <button class="tab-btn active" data-mode="tldr">TL;DR</button>
-        <button class="tab-btn" data-mode="normal">Normal</button>
-        <button class="tab-btn" data-mode="mz">MZ</button>
+    <section class="hero">
+      <div class="hero-number" id="hero-score">74</div>
+      <div class="hero-label">Consistency Score</div>
+      <div class="hero-meta">
+        <span class="up">▲ 2.1% vs last week</span>
+        <span>Peak 82</span>
+        <span><span class="footer-dot" style="display:inline-block;width:6px;height:6px"></span> 17-day streak</span>
       </div>
-      <div class="mt-3 p-4 border border-[#2a2a3a] rounded-lg bg-[#0c0c12] min-h-[80px] flex items-center glow-purple">
-        <p id="tldr-text" class="tldr-content text-sm md:text-base leading-relaxed"></p>
-      </div>
-    </div>
+    </section>
 
     <!-- ════════════════════════════════
-         ACTIVITY STATUS GRID
+         ALLOCATIONS
          ════════════════════════════════ -->
-    <div class="mt-8">
-      <div class="text-[0.7rem] text-[#6b7280] tracking-[1px] mb-3">ACTIVITY STATUS  ──  4 MODULES ONLINE</div>
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+    <section class="section">
+      <div class="section-header">
+        <span class="section-title">Allocations</span>
+        <span class="section-line"></span>
+      </div>
 
-        <!-- Chess -->
-        <div class="act-card">
-          <div class="flex items-center justify-between mb-2">
-            <span class="text-[0.65rem] text-[#6b7280] tracking-[1px]">CHESS</span>
-            <span class="text-lg">♟️</span>
-          </div>
-          <div class="text-[0.7rem] space-y-1">
-            <div class="flex justify-between"><span class="text-[#6b7280]">Rating</span><span class="text-[#e2e8f0] font-bold">1,850</span></div>
-            <div class="flex justify-between"><span class="text-[#6b7280]">Peak</span><span class="text-[#22d3ee]">1,920</span></div>
-            <div class="flex justify-between"><span class="text-[#6b7280]">Games</span><span class="text-[#e2e8f0]">847</span></div>
-            <div class="flex justify-between items-center mt-1 pt-1 border-t border-[#1e1e2a]">
-              <span class="text-[#6b7280]">Lichess</span>
-              <span class="text-[0.6rem] text-[#4ade80] flex items-center gap-1"><span class="inline-block w-1.5 h-1.5 rounded-full bg-[#4ade80] dot-pulse"></span> ACTIVE</span>
-            </div>
+      <div id="alloc-container">
+
+        <div class="alloc-row">
+          <span class="alloc-name">Security</span>
+          <span class="alloc-pct" id="pct-0">74%</span>
+          <div class="alloc-bar-wrap"><div class="alloc-bar"><div class="alloc-bar-fill" id="bar-0"></div></div></div>
+          <span class="alloc-change up">▲2.1%</span>
+          <span class="alloc-status"><span class="status-dot active"></span>Active</span>
+        </div>
+
+        <div class="alloc-row">
+          <span class="alloc-name">Coding</span>
+          <span class="alloc-pct" id="pct-1">65%</span>
+          <div class="alloc-bar-wrap"><div class="alloc-bar"><div class="alloc-bar-fill" id="bar-1"></div></div></div>
+          <span class="alloc-change up">▲0.8%</span>
+          <span class="alloc-status"><span class="status-dot active"></span>Active</span>
+        </div>
+
+        <div class="alloc-row">
+          <span class="alloc-name">Reading</span>
+          <span class="alloc-pct" id="pct-2">82%</span>
+          <div class="alloc-bar-wrap"><div class="alloc-bar"><div class="alloc-bar-fill" id="bar-2"></div></div></div>
+          <span class="alloc-change up">▲3.2%</span>
+          <span class="alloc-status"><span class="status-dot active"></span>Active</span>
+        </div>
+
+        <div class="alloc-row">
+          <span class="alloc-name">Chess</span>
+          <span class="alloc-pct" id="pct-3">42%</span>
+          <div class="alloc-bar-wrap"><div class="alloc-bar"><div class="alloc-bar-fill" id="bar-3"></div></div></div>
+          <span class="alloc-change down">▼1.2%</span>
+          <span class="alloc-status"><span class="status-dot idle"></span>Idle</span>
+        </div>
+
+        <div class="alloc-row">
+          <span class="alloc-name">Exercise</span>
+          <span class="alloc-pct" id="pct-4">30%</span>
+          <div class="alloc-bar-wrap"><div class="alloc-bar"><div class="alloc-bar-fill" id="bar-4"></div></div></div>
+          <span class="alloc-change up">▲0.5%</span>
+          <span class="alloc-status"><span class="status-dot idle"></span>Idle</span>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════
+         TWO-COLUMN: RHYTHM + METRICS
+         ════════════════════════════════ -->
+    <section class="section">
+      <div class="section-header">
+        <span class="section-title">Performance</span>
+        <span class="section-line"></span>
+      </div>
+
+      <div class="two-col">
+
+        <!-- Rhythm Chart -->
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem 1rem 0.75rem;">
+          <div style="font-size:0.65rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:0.5rem;">Weekly Rhythm</div>
+          <div class="rhythm-grid" id="rhythm-grid">
+            <div class="rhythm-col"><div class="rhythm-bar" style="height:80%"></div><span class="rhythm-day">Mon</span><span class="rhythm-val">80%</span></div>
+            <div class="rhythm-col"><div class="rhythm-bar" style="height:78%"></div><span class="rhythm-day">Tue</span><span class="rhythm-val">78%</span></div>
+            <div class="rhythm-col"><div class="rhythm-bar today" style="height:62%"></div><span class="rhythm-day">Wed</span><span class="rhythm-val">62%</span></div>
+            <div class="rhythm-col"><div class="rhythm-bar" style="height:0%"></div><span class="rhythm-day">Thu</span><span class="rhythm-val">—</span></div>
+            <div class="rhythm-col"><div class="rhythm-bar" style="height:0%"></div><span class="rhythm-day">Fri</span><span class="rhythm-val">—</span></div>
+            <div class="rhythm-col"><div class="rhythm-bar" style="height:0%"></div><span class="rhythm-day">Sat</span><span class="rhythm-val">—</span></div>
+            <div class="rhythm-col"><div class="rhythm-bar" style="height:0%"></div><span class="rhythm-day">Sun</span><span class="rhythm-val">—</span></div>
           </div>
         </div>
 
-        <!-- Hypercube -->
-        <div class="act-card">
-          <div class="flex items-center justify-between mb-2">
-            <span class="text-[0.65rem] text-[#6b7280] tracking-[1px]">HYPERCUBE</span>
-            <span class="text-lg">🧊</span>
+        <!-- Summary cards -->
+        <div class="summary-grid">
+          <div class="summary-card">
+            <div class="summary-card-label">Streak</div>
+            <div class="summary-card-value">17<span style="font-size:0.8rem;color:var(--text-sec);font-weight:400;">d</span></div>
+            <div class="summary-card-sub">Longest: 24d</div>
           </div>
-          <div class="text-[0.7rem] space-y-1">
-            <div class="flex justify-between"><span class="text-[#6b7280]">Dimension</span><span class="text-[#8b5cf6] font-bold">4D</span></div>
-            <div class="flex justify-between"><span class="text-[#6b7280]">State</span><span class="text-[#e2e8f0]">Navigating</span></div>
-            <div class="flex justify-between"><span class="text-[#6b7280]">Stability</span><span class="text-[#4ade80]">97.3%</span></div>
-            <div class="flex justify-between items-center mt-1 pt-1 border-t border-[#1e1e2a]">
-              <span class="text-[#6b7280]">4D Puzzle</span>
-              <span class="text-[0.6rem] text-[#22d3ee] flex items-center gap-1">◆ ROTATING</span>
-            </div>
+          <div class="summary-card">
+            <div class="summary-card-label">Focus Balance</div>
+            <div class="summary-card-value">1.4<span style="font-size:0.8rem;color:var(--text-sec);font-weight:400;">x</span></div>
+            <div class="summary-card-sub">Active / Idle ratio</div>
           </div>
-        </div>
-
-        <!-- O2Jam -->
-        <div class="act-card">
-          <div class="flex items-center justify-between mb-2">
-            <span class="text-[0.65rem] text-[#6b7280] tracking-[1px]">RHYTHM</span>
-            <span class="text-lg">🎵</span>
+          <div class="summary-card">
+            <div class="summary-card-label">Peak Score</div>
+            <div class="summary-card-value">82</div>
+            <div class="summary-card-sub"><span class="up">▲ from 78 last month</span></div>
           </div>
-          <div class="text-[0.7rem] space-y-1">
-            <div class="flex justify-between"><span class="text-[#6b7280]">Game</span><span class="text-[#e2e8f0]">O2Jam</span></div>
-            <div class="flex justify-between"><span class="text-[#6b7280]">Rank</span><span class="text-[#f472b6] font-bold">S4</span></div>
-            <div class="flex justify-between"><span class="text-[#6b7280]">Accuracy</span><span class="text-[#22d3ee]">96.8%</span></div>
-            <div class="flex justify-between items-center mt-1 pt-1 border-t border-[#1e1e2a]">
-              <span class="text-[#6b7280]">Max Combo</span>
-              <span class="text-[#e2e8f0]">1,247</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Security -->
-        <div class="act-card">
-          <div class="flex items-center justify-between mb-2">
-            <span class="text-[0.65rem] text-[#6b7280] tracking-[1px]">SECURITY</span>
-            <span class="text-lg">🛡️</span>
-          </div>
-          <div class="text-[0.7rem] space-y-1">
-            <div class="flex justify-between"><span class="text-[#6b7280]">Platform</span><span class="text-[#e2e8f0]">Dreamhack</span></div>
-            <div class="flex justify-between"><span class="text-[#6b7280]">Level</span><span class="text-[#4ade80] font-bold">A2</span></div>
-            <div class="flex justify-between"><span class="text-[#6b7280]">Points</span><span class="text-[#22d3ee]">4,280</span></div>
-            <div class="flex justify-between items-center mt-1 pt-1 border-t border-[#1e1e2a]">
-              <span class="text-[#6b7280]">Spec</span>
-              <span class="text-[0.6rem] text-[#e2e8f0]">Pwnable / Reversing</span>
-            </div>
+          <div class="summary-card">
+            <div class="summary-card-label">Weekly Trend</div>
+            <div class="summary-card-value" style="color:var(--green);">+2.1<span style="font-size:0.8rem;font-weight:400;">%</span></div>
+            <div class="summary-card-sub">3 of 5 disciplines up</div>
           </div>
         </div>
 
       </div>
-    </div>
+    </section>
 
     <!-- ════════════════════════════════
-         ANTI-NOISE MATRIX
+         ACTIVITY LOG
          ════════════════════════════════ -->
-    <div class="mt-8">
-      <div class="text-[0.7rem] text-[#6b7280] tracking-[1px] mb-3">ANTI-NOISE MATRIX  ──  AD / TRACKER FILTER ACTIVE</div>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-
-        <!-- Spotify -->
-        <div class="widget-box flex items-center gap-3">
-          <span class="text-lg">🎧</span>
-          <div class="flex-1 min-w-0">
-            <div class="text-[0.6rem] text-[#6b7280] tracking-[1px]">NOW PLAYING</div>
-            <div class="text-[0.8rem] text-[#e2e8f0] truncate font-medium">Synthwave Sunset</div>
-            <div class="text-[0.65rem] text-[#4b5563] truncate">lofi / chillstep radio</div>
-          </div>
-          <span class="text-[0.55rem] text-[#4ade80] px-1.5 py-0.5 border border-[#2a2a3a] rounded">▶ LIVE</span>
-        </div>
-
-        <!-- Laftel -->
-        <div class="widget-box flex items-center gap-3">
-          <span class="text-lg">📺</span>
-          <div class="flex-1 min-w-0">
-            <div class="text-[0.6rem] text-[#6b7280] tracking-[1px]">LAFTEL D-DAY</div>
-            <div class="text-[0.75rem] text-[#e2e8f0] font-medium">D-<span id="laftel-dday">12</span></div>
-            <div class="text-[0.65rem] text-[#4b5563] truncate">기대작: 시즌2 공개</div>
-          </div>
-          <span class="text-[0.55rem] text-[#22d3ee] px-1.5 py-0.5 border border-[#2a2a3a] rounded">◉ ON AIR</span>
-        </div>
-
-        <!-- Brave Tracker -->
-        <div class="widget-box flex items-center gap-3">
-          <span class="text-lg">🛡️</span>
-          <div class="flex-1 min-w-0">
-            <div class="text-[0.6rem] text-[#6b7280] tracking-[1px]">TRACKERS BLOCKED</div>
-            <div class="text-[0.8rem] text-[#e2e8f0] font-medium"><span id="tracker-count">0</span> blocked</div>
-            <div class="text-[0.65rem] text-[#4b5563]">this session</div>
-          </div>
-          <span class="text-[0.55rem] text-[#f472b6] px-1.5 py-0.5 border border-[#2a2a3a] rounded">✕ AD</span>
-        </div>
-
+    <section class="section">
+      <div class="section-header">
+        <span class="section-title">Activity Log</span>
+        <span class="section-line"></span>
       </div>
-    </div>
+      <div class="log-list">
+        <div class="log-item">
+          <span class="log-time">17:00</span>
+          <span class="log-desc">CTF writeup 정리 완료</span>
+          <span class="log-dur">+1.2h</span>
+          <span class="log-mark check">●</span>
+        </div>
+        <div class="log-item">
+          <span class="log-time">15:30</span>
+          <span class="log-desc">Hypercube 4D — new personal best</span>
+          <span class="log-dur">+0.5h</span>
+          <span class="log-mark star">★</span>
+        </div>
+        <div class="log-item">
+          <span class="log-time">12:00</span>
+          <span class="log-desc">Chess session (+8 ELO, 1850 → 1858)</span>
+          <span class="log-dur">+0.5h</span>
+          <span class="log-mark check">●</span>
+        </div>
+        <div class="log-item">
+          <span class="log-time">10:30</span>
+          <span class="log-desc">Coding — React component library</span>
+          <span class="log-dur">+1.0h</span>
+          <span class="log-mark check">●</span>
+        </div>
+        <div class="log-item">
+          <span class="log-time">09:00</span>
+          <span class="log-desc">Morning reading / security news</span>
+          <span class="log-dur">+0.5h</span>
+          <span class="log-mark check">●</span>
+        </div>
+      </div>
+    </section>
 
     <!-- ════════════════════════════════
-         FOOTER: status line (vim-style)
+         FOOTER
          ════════════════════════════════ -->
-    <footer class="mt-auto pt-8 flex flex-wrap items-center justify-between text-[0.65rem] text-[#4b5563] border-t border-[#1e1e2a]">
-      <div class="flex items-center gap-3 flex-wrap">
-        <span class="text-[#6b7280]">◆</span>
-        <span class="text-[#4ade80]" id="footer-mode">NORMAL</span>
-        <span>mode</span>
-        <span class="text-[#6b7280]">|</span>
+    <footer class="footer">
+      <div class="footer-left">
+        <span class="footer-dot"></span>
+        <span>System Running</span>
+        <span>·</span>
         <span id="footer-uptime">UP 00:00:00</span>
+        <span>·</span>
+        <span>Local Data</span>
       </div>
-      <div class="flex items-center gap-2">
-        <span>●</span>
-        <span>Neovim</span>
-        <span class="text-[#6b7280]">|</span>
-        <span>v1.0.0</span>
+      <div class="footer-right">
+        <span>Σ v1.0</span>
+        <span>·</span>
+        <span>+2.1% w/w</span>
+        <span>·</span>
+        <span>17d</span>
       </div>
     </footer>
 
@@ -344,86 +681,68 @@
 
   <script>
   (function () {
-    /* ── TL;DR Toggle ── */
-    const texts = {
-      tldr: '보안 연구하는 사람. 커널과 취약점 사이를 탐험 중입니다.',
-      normal: '리눅스 환경에서 시스템 보안과 프로그래밍을 공부하고 있어요. CTF 대회에 참여하고, AI 프롬프트 디자인과 파이썬 자동화에도 관심이 많습니다. 주로 커널 영역과 취약점 분석을 중심으로 탐구 중입니다.',
-      mz: '커널부터 웹까지 다 긁는 보안덕후 🖤 CTF도 뛰고 AI도 굴리고 체스도 둠 ㅋㅋ 요즘 4D 하이퍼큐브에 빠져서 정신없는데 재밌으니까 된거지 ~',
-    };
-    const tabGroup = document.getElementById('tab-group');
-    const textEl = document.getElementById('tldr-text');
-    let currentMode = 'tldr';
+    /* ── date ── */
+    var d = new Date();
+    var months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+    var dateEl = document.getElementById('header-date');
+    if (dateEl) {
+      dateEl.textContent = String(d.getDate()).padStart(2,'0') + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+    }
 
-    textEl.textContent = texts.tldr;
+    /* ── animate bars on load ── */
+    var barIds = ['bar-0','bar-1','bar-2','bar-3','bar-4'];
+    var targets = [74, 65, 82, 42, 30];
 
-    tabGroup.addEventListener('click', function (e) {
-      const btn = e.target.closest('.tab-btn');
-      if (!btn) return;
-      const mode = btn.dataset.mode;
-      if (mode === currentMode) return;
-      currentMode = mode;
+    function animateBars() {
+      barIds.forEach(function (id, i) {
+        var el = document.getElementById(id);
+        if (el) {
+          setTimeout(function () {
+            el.style.width = targets[i] + '%';
+          }, i * 120 + 200);
+        }
+      });
+    }
 
-      tabGroup.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
+    /* visibility observer to trigger once */
+    var observed = false;
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting && !observed) {
+          observed = true;
+          animateBars();
+          observer.disconnect();
+        }
+      });
+    }, { threshold: 0.1 });
 
-      textEl.classList.add('fade');
-      setTimeout(function () {
-        textEl.textContent = texts[mode];
-        textEl.classList.remove('fade');
-      }, 150);
+    var allocContainer = document.getElementById('alloc-container');
+    if (allocContainer) observer.observe(allocContainer);
 
-      const footerMode = document.getElementById('footer-mode');
-      if (footerMode) footerMode.textContent = mode.toUpperCase();
-    });
+    /* fallback: animate after 500ms anyway */
+    setTimeout(function () {
+      if (!observed) {
+        observed = true;
+        animateBars();
+        observer.disconnect();
+      }
+    }, 1500);
 
-    /* ── Uptime ── */
-    (function startUptime() {
-      const start = Date.now();
-      const display = document.getElementById('uptime-display');
-      const footerUptime = document.getElementById('footer-uptime');
+    /* ── uptime ── */
+    (function () {
+      var start = Date.now();
+      var el = document.getElementById('footer-uptime');
+      if (!el) return;
       function pad(n) { return String(n).padStart(2, '0'); }
       function tick() {
         var s = Math.floor((Date.now() - start) / 1000);
-        var h = Math.floor(s / 3600);
-        var m = Math.floor((s % 3600) / 60);
-        var sec = s % 60;
-        var str = pad(h) + ':' + pad(m) + ':' + pad(sec);
-        if (display) display.textContent = str;
-        if (footerUptime) footerUptime.textContent = 'UP ' + str;
+        el.textContent = 'UP ' + pad(Math.floor(s / 3600)) + ':' + pad(Math.floor((s % 3600) / 60)) + ':' + pad(s % 60);
       }
       tick();
       setInterval(tick, 1000);
     })();
 
-    /* ── Brave Tracker Counter ── */
-    (function startTracker() {
-      var count = 0;
-      var el = document.getElementById('tracker-count');
-      if (!el) return;
-      function increment() {
-        count += Math.floor(Math.random() * 3) + 1;
-        el.textContent = count;
-        el.classList.remove('count-pop');
-        void el.offsetWidth; // reflow
-        el.classList.add('count-pop');
-      }
-      increment();
-      setInterval(increment, 3000 + Math.random() * 4000);
-    })();
-
-    /* ── Laftel D-Day random variation ── */
-    (function () {
-      var el = document.getElementById('laftel-dday');
-      if (!el) return;
-      var d = parseInt(el.textContent, 10);
-      setInterval(function () {
-        d = Math.max(2, d + (Math.random() > 0.5 ? -1 : 0));
-        el.textContent = d;
-      }, 8000);
-    })();
-
   })();
   </script>
-
 </body>
 </html>
